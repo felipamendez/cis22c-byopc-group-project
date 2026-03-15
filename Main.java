@@ -43,7 +43,7 @@ public class Main {
 
         if (found != null && found.passwordMatch(password)) {
             System.out.println("Login successful!");
-            System.out.println(found); // tostring
+            System.out.println(found); // toString
         } else {
             System.out.println("Invalid email or password.");
         }
