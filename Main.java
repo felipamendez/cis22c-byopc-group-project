@@ -5,12 +5,14 @@ public class Main {
     public static void main(String[] args) {
         String username;
         String password;
-        HashTable<User> users = new HashTable<>(10);
+        HashTable<Customer> customers = new HashTable<>(10);
+        HashTable<Employee> employees = new HashTable<>(10);
 
         ///////////// USER LOGIN PRINT OUTS ////////////////
         //dummy users for testing
-        users.add(new Customer("Alice", "Smith", "alice@email.com", "1234"));
-        users.add(new Employee("Bob", "Jones", "bob@email.com", "abcd", true)); 
+        customers.add(new Customer("Alice", "Smith", "alice@email.com", "1234", 
+            "123 Main St", "San Jose", "CA", "95112"));
+        employees.add(new Employee("Bob", "Jones", "bob@email.com", "abcd", true));
 
         Scanner input = new Scanner(System.in);
 
@@ -21,15 +23,20 @@ public class Main {
         int choice = input.nextInt();
         input.nextLine();
 
-        if (choice == 1) {
-            login(users, input);
+        //lets use 3 differend methods to separate the employee, guest, and customer menu options
+
+        if (choice == 1) { 
+            login(customers, employees, input);
         } else if (choice == 2) {
             //create an account
+        } else if (choice == 3) {
+            System.out.println("\nLogged in as Guest.");
+            //guest menu options
         }
 
     }
 
-    public static void login(HashTable<User> users, Scanner input) {
+    public static void login(HashTable<Customer> customers, HashTable<Employee> employees, Scanner input) {
 
         System.out.print("Enter email: ");
         String email = input.nextLine();
@@ -37,18 +44,26 @@ public class Main {
         System.out.print("Enter password: ");
         String password = input.nextLine();
 
-        User temp = new Customer("", "", email, ""); // check temp user with same email
+        Customer tempCustomer = new Customer("", "", email, password, "", "", "", "");
+        Employee tempEmployee = new Employee("", "", email, password, false);
 
-        User found = users.get(temp); // use hastable to find user with the matching email
+        Customer foundCustomer = customers.get(tempCustomer);
+        Employee foundEmployee = employees.get(tempEmployee);
 
-        if (found != null && found.passwordMatch(password)) {
-            System.out.println("Login successful!");
-            System.out.println(found); // toString
+        if (foundCustomer != null && foundCustomer.passwordMatch(password)) {
+            System.out.println("Customer login successful!");
+            System.out.println(foundCustomer);
+
+        } else if (foundEmployee != null && foundEmployee.passwordMatch(password)) {
+            System.out.println("Employee login successful!");
+            System.out.println(foundEmployee);
+
         } else {
             System.out.println("Invalid email or password.");
         }
-
     }
+
+    
 
 
 
