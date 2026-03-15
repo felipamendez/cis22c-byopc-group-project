@@ -66,12 +66,13 @@ public abstract class User {
             return false;
         } else {
             User user = (User) obj;
-            return email.equals(user.email); // check the email equal
+            return this.email.equals(user.email) &&
+                this.password.equals(user.password); // check the email and pw equal
         }
     }
 
     @Override public int hashCode() { // override hasCode to hash email
-        return email.hashCode();
+        return (email + password).hashCode();
     }
 
 
