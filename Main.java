@@ -1,3 +1,7 @@
+/**
+ * @author Felipa Mendez
+ * @author Peilian 
+ */
 import java.util.Scanner;
 
 
@@ -34,6 +38,7 @@ public class Main {
             createAccount(customers, input);
         } else if (choice == 3) {
             System.out.println("\nLogged in as Guest.");
+            guestInterface();
             //guest menu options
         }
 
@@ -106,7 +111,25 @@ public class Main {
         System.out.println("Account created successfully! You can now login.");
     }
 
-    
+    public static void customerInterface() {
+        
+        
+    }
+
+    public static void guestInterface() {
+        
+        
+    }
+
+    public static void employeeInterface() {
+
+        
+    }
+
+    public static void managerInterface() {
+
+        
+    }
 
     
 
