@@ -3,18 +3,107 @@
  * @author Peilian Song
  */
 import java.util.Scanner;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         HashTable<Customer> customers = new HashTable<>(10);
         HashTable<Employee> employees = new HashTable<>(10);
+        CatalogService catalog = new CatalogService();
+        //do we have to load the product file csv? ^^^
+        Heap<Order> orderHeap = new Heap<>(); // is this right?
+
 
         ///////////// USER LOGIN PRINT OUTS ////////////////
         //dummy users for testing
         customers.add(new Customer("Alicia", "Smith", "alicia@email.com", "1234", 
             "123 Main St", "San Jose", "CA", "95112"));
         employees.add(new Employee("Bobby", "Jones", "bobby@email.com", "abcd", true));
+
+        //seeding users_upload.txt file
+        Scanner file = new Scanner(new File("users_upload.txt"));
+
+        //USER SCAN
+        while(file.hasNext()) {
+            String first = file.next();
+
+            // stop if we reach emoloyees section
+            if (first.equals("EMPLOYEES")) {
+                break;
+            }
+
+            String last = file.next();
+            String username = file.next();
+            String password = file.next();
+            String address = file.next();
+            String city = file.next();
+            String state = file.next();
+            String zip = file.next();
+
+            Customer c = new Customer(first, last, username, password, address, city, state, zip);
+
+            customers.add(c);
+
+        } 
+
+        //EMPLOYEE SCAN
+        while (file.hasNext()) {
+
+            String first = file.next();
+
+            // stop if we reach orders
+            if (first.equals("ORDERS")) {
+                break;
+            }
+
+            String last = file.next();
+            String email = file.next();
+            String password = file.next();
+            boolean manager = file.nextBoolean();
+
+            Employee e = new Employee(first, last, email, password, manager);
+
+            employees.add(e);
+        }
+
+        //ORDER SCAN
+        while (file.hasNext()) {
+
+            int orderId = file.nextInt();
+            String username = file.next();
+            int shippingSpeed = file.nextInt();
+
+            LinkedList<PCPart> items = new LinkedList<>();
+
+            // read product SKUs until end of line
+            String line = file.nextLine().trim();
+
+            if (!line.isEmpty()) {
+                Scanner skuScan = new Scanner(line);
+
+                while (skuScan.hasNext()) {
+
+                    String sku = skuScan.next();
+                    PCPart part = catalog.searchByPrimaryKey(sku); // is this right?
+
+                    items.addLast(part);
+                }
+
+                skuScan.close();
+            }
+
+            Customer temp = new Customer("", "", username, "", "", "", "", "");
+            Customer customer = customers.get(temp);
+
+            Order order = new Order(orderId, customer, items, shippingSpeed);
+
+            orderHeap.insert(order); // add to priority queue 
+        }
+
+        file.close(); // end file scan start new scaner
 
         Scanner input = new Scanner(System.in);
 
@@ -32,12 +121,11 @@ public class Main {
             input.nextLine();
 
             //lets use 3 differend methods to separate the employee, guest, and customer menu options
-            //print out 3 files one for customer.txt, employee.txt, manager.txt or something
+            //print out files one for customer.txt, employee.txt, manager.txt or something
 
             if (choice == 1) { 
                 login(customers, employees, input);
             } else if (choice == 2) { //create an account 
-                //make sure to add new account to file! - added to hashtable - tostring - we will print the hashtable with printWriter
                 createAccount(customers, input);
             } else if (choice == 3) { //guest menu options
                 System.out.println("\nLogged in as Guest.");
