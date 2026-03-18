@@ -82,6 +82,16 @@ public class CatalogService {
       return secondaryIndex.inOrderString();
    }
 
+   public LinkedList<PCPart> searchByPriceRange(double minPrice, double maxPrice) {
+      LinkedList<PCPart> matches = new LinkedList<>();
+      skuIndex.inOrderForEach(part -> {
+         if (part.getPrice() >= minPrice && part.getPrice() <= maxPrice) {
+            matches.addLast(part);
+         }
+      });
+      return matches;
+   }
+
    public boolean updatePrice(String sku, double newPrice) {
       if (newPrice < 0) {
          return false;
