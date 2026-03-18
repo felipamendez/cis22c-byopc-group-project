@@ -6,6 +6,8 @@ import java.util.Scanner;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +20,12 @@ public class Main {
 
         HashTable<Employee> employees = new HashTable<>(10);
         CatalogService catalog = new CatalogService();
-        //do we have to load the product file csv? ^^^
+        try {
+            int loaded = catalog.loadFromCsv(Paths.get("pc_parts_products.csv"));
+            System.out.println("Loaded " + loaded + " products into catalog.");
+        } catch (IOException e) {
+            System.out.println("Warning: could not load product catalog: " + e.getMessage());
+        }
         Comparator<Order> orderByPriority = (a, b) -> Integer.compare(a.getPriorityScore(), b.getPriorityScore());
         Heap<Order> orderHeap = new Heap<>(new ArrayList<>(), orderByPriority);
 
