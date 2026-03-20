@@ -117,16 +117,48 @@ public class OrderService {
         System.out.println(orderHeap.getMax());
     }
 
-    public static void viewAllOrdersSortedByPriority(Heap<Order> orderHeap) {
+    /**
+     * Unshipped orders in the heap (heap sort), then all shipped orders across customers.
+     */
+    public static void viewAllOrdersSortedByPriority(
+        Heap<Order> orderHeap,
+        LinkedList<Customer> customerList
+    ) {
         if (orderHeap.isEmpty()) {
             System.out.println("No orders in the queue.");
-            return;
+        } else {
+            ArrayList<Order> sorted = orderHeap.heapSortSnapshot();
+            System.out.println("All orders sorted by priority (highest to lowest):");
+            for (int i = 0; i < sorted.size(); i++) {
+                System.out.println(sorted.get(i));
+            }
         }
+        System.out.println();
+        viewAllShippedOrdersAcrossCustomers(customerList);
+    }
 
-        ArrayList<Order> sorted = orderHeap.heapSortSnapshot();
-        System.out.println("All orders sorted by priority (highest to lowest):");
-        for (int i = 0; i < sorted.size(); i++) {
-            System.out.println(sorted.get(i));
+    /** Print each customer's shipped orders (not in the heap after shipping). */
+    public static void viewAllShippedOrdersAcrossCustomers(LinkedList<Customer> customerList) {
+        System.out.println("=== Shipped orders (by customer) ===");
+        boolean any = false;
+        customerList.positionIterator();
+        while (!customerList.offEnd()) {
+            Customer c = customerList.getIterator();
+            LinkedList<Order> shipped = c.getShippedOrders();
+            if (shipped.getLength() > 0) {
+                any = true;
+                System.out.println("\n-- Customer: " + c.getFirstName() + " " + c.getLastName()
+                    + " (" + c.getUsername() + ") --");
+                shipped.positionIterator();
+                while (!shipped.offEnd()) {
+                    System.out.println(shipped.getIterator());
+                    shipped.advanceIterator();
+                }
+            }
+            customerList.advanceIterator();
+        }
+        if (!any) {
+            System.out.println("(No shipped orders.)");
         }
     }
 }
