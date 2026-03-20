@@ -406,7 +406,7 @@ public class Main {
                     OrderService.viewHighestPriorityOrder(orderHeap);
                     break;
                 case 3:
-                    OrderService.viewAllOrdersSortedByPriority(orderHeap);
+                    OrderService.viewAllOrdersSortedByPriority(orderHeap, customerList);
                     break;
                 case 4:
                     OrderService.shipTopOrder(orderHeap);
@@ -455,7 +455,7 @@ public class Main {
                     OrderService.viewHighestPriorityOrder(orderHeap);
                     break;
                 case 3:
-                    OrderService.viewAllOrdersSortedByPriority(orderHeap);
+                    OrderService.viewAllOrdersSortedByPriority(orderHeap, customerList);
                     break;
                 case 4:
                     OrderService.shipTopOrder(orderHeap);
